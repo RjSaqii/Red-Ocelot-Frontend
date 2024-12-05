@@ -8,7 +8,7 @@
 
 /* Body Styling */
 body {
-    background-color: #f4f4f4;
+    background-color: #080708;
     color: #333;
     line-height: 1.6;
 }
@@ -22,7 +22,7 @@ body {
 
 /* Navbar Styling */
 .navbar {
-    background-color: #535151;
+    background-color: #080708;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -75,7 +75,7 @@ body {
 footer {
     text-align: center;
     padding: 10px 0;
-    background-color: #535151;
+    background-color: #080708;
     color: #f4f4f4;
     font-size: 0.9em;
     margin-top: 20px;

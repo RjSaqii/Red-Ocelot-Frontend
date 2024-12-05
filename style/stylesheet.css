@@ -8,7 +8,7 @@
 
 /* Body Styling */
 body {
-    background-color: #080708;
+    background-color: #ffff;
     color: #333;
     line-height: 1.6;
 }
@@ -43,7 +43,7 @@ body {
 }
 
 .navbar-menu a {
-    color: rgb(240, 9, 9);
+    color: #f00909;
     text-decoration: none;
     font-weight: bold;
     font-size: 1em;
@@ -80,5 +80,9 @@ footer {
     font-size: 0.9em;
     margin-top: 20px;
     border-top: 3px solid rgb(240, 9, 9);
+}
+
+title{
+    color: rgb(240, 9, 9); 
 }
 

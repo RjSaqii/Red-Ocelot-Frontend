@@ -68,7 +68,7 @@ body {
 .chart-container h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
-    color: #333;
+    color: #ffffff;
 }
 
 /* Footer Styling */
@@ -80,4 +80,23 @@ footer {
     font-size: 0.9em;
     margin-top: 20px;
     border-top: 3px solid rgb(240, 9, 9);
+}
+#dropdown-container{
+    display: flex;
+    align-items: center;
+}
+#repo-dropdown{
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+.main_content{
+    align-items: center;
+    line-height: 10px;
+}
+.red-text{
+    color:#f00909
+}
+.white-text{
+    color: white;
 }

@@ -12,30 +12,16 @@
             <div class="navbar-brand">
                 <a href="#">Red Ocelot</a> 
             </div>    
-
-            <ul class="navbar-menu">
-                <li><a href='http://127.0.0.1:8000/histogram' onclick="showChart('Histogram')">Histogram</a></li>
-                <li><a href='http://127.0.0.1:8000/barchart' onclick="showChart('Barchart')">Bar Chart</a></li>
-                <li><a href='http://127.0.0.1:8000/heatmap' onclick="showChart('Heatmap')">Heat Map</a></li>
-                <li><a href='http://127.0.0.1:8000/piechart' onclick="showChart('Piechart')">Pie Chart</a></li>
-            </ul>        
         </nav>
 
-        <div id="Histogram" class="histogram-container">
-            
-        </div>
-        <div id="BarChart" class="barchart-container">
-
-        </div>
-        <div id="Heatmap" class="heatmap-container">
-
-        </div>
-        <div id="Piechart" class="piechart-container">
-
-        </div>
-
-    </div>
+            <div id="button-container">
+                <button id="btn-histogarm" onclick="showChart('Histogram')">Histogram</button>
+                <button id="btn-barchart" onclick="showChart('Barchart')">Bar Chart</a></li>
+                <button id="btn-heatmap" onclick="showChart('Heatmap')">Heat Map</a></li>
+                <button id="btn-piechart" onclick="showChart('Piechart')">Pie Chart</a></li>
+            </div>        
     
+    </div> 
 </body>
 
 <footer>

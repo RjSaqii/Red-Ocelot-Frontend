@@ -13,7 +13,27 @@
     </script>
     <select name="multioptions" id="multioptions"></select>
     <select name="authors" id="authors"></select>
+
+    <!-- The page will render the pie chart later, the function just needs to be here to exist -->
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
     <script>
+        async function renderPieChart(repoName) {
+    
+            // Get the currently selected repository name
+            const currentRepoName = document.getElementById("multioptions").value;
+
+            try {
+                // Fetch plot data from the API
+                const plotData = await getPlots(currentRepoName); // Uses the getPlots function
+
+                // Create the pie chart
+                createPieChart(plotData, "pieChart"); // Render the chart in the #pieChart element
+            } catch (error) {
+                console.error("Error rendering pie chart:", error);
+            }
+        }
+        
         async function populateDropDown() {
             var repoNameData = await getRepoNames()
 
@@ -32,8 +52,10 @@
 
                 select.appendChild(option)
             }
-
-
+            // Render pie chart for the first repository by default
+            if (repoNameData.length > 0) {
+                    await renderPieChart();
+                }
         }
          
 
@@ -48,17 +70,17 @@
             var parent = document.body
             let select = document.getElementById("authors")
 
-            for (let i = 0; i < authorData.length; i++) {
-                const author = authorData[i].author;
+                for (let i = 0; i < authorData.length; i++) {
+                    const author = authorData[i].author;
 
-                let option = document.createElement('option')
-                option.text = author
-                option.value = author
-                option.setAttribute("id", "multioptions")
+                    let option = document.createElement('option')
+                    option.text = author
+                    option.value = author
+                    option.setAttribute("id", "multioptions")
 
-                select.appendChild(option)
-        }
-    }
+                    select.appendChild(option)
+                }
+            }
     populateDropDown().then(()=>{
         populateAuthorsDropDown()
     });
@@ -68,8 +90,11 @@
     repoOptions.addEventListener('change', function(event){
         authorOptions.options.length = 0
         populateAuthorsDropDown()
+        renderPieChart()
     })
     </script>
+
+    <div id="pieChart"></div>
 
    
     

@@ -56,3 +56,28 @@ async function getAuthors(repoName) {
     return data
 }
 
+// function to get plots from backend, plots will be used to generate pie chart using plotly
+async function getPlots(repoName) {
+    const data = await sendPostRequest("piechart",{reponame:repoName});
+    return data
+}
+
+//Function to create pie chart using plotly data
+function createPieChart(plotData, targetElementId) {
+    plotData = JSON.parse(plotData)
+    // Parse the data and layout from the plotData
+    const data = plotData.data; // Extract the data array
+    const layout = plotData.layout; // Extract the layout object
+
+    console.log(data)
+    console.log(layout)
+
+    console.log(typeof plotData)
+
+    // Ensure 'type' is explicitly set to 'pie'
+    data.forEach(trace => {trace.type = "pie"});
+
+    // Use Plotly to render the pie chart in the specified HTML element
+    Plotly.newPlot(targetElementId, data, layout);
+}
+

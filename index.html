@@ -1,26 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/stylesheet.css">
-    <title> Red Ocelot</title> 
+    <title>Red Ocelot</title>
+</head>
 
+<body>
+    <!-- Navbar -->
     <nav class="navbar">
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
         <div class="navbar-brand">
             <div id="dropdown-container">
-                <label for="repo-dropdown"><span class="white-text">Select the Repository</span></label>
-                <select id="repo-dropdown">
-                    <option value="Cobol2XML">Cobol2XML</option>
-                    <option value="dubbo">dubbo</option>
-                    <option value="fhir-data-pipes">fhir-data-pipes</option>
+                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
+                <select id="multioptions" name="multioptions">
+                </select>
+
+                <label for="authors"><span class="white-text">Select the Author:</span></label>
+                <select name="authors" id="authors">
                 </select>
             </div>
         </div>    
     </nav>
-</head>
-
-<body>
+    <!-- Main Content -->
     <div class="main-content">
         <h1><strong>Unlock Insight into Your Database</strong></h1>
         <h3>Explore Source Code Metrics and Commit Histories</h3>
@@ -30,16 +33,58 @@
             and compare repositories to gain a better understanding of your source code.
         </p>
     </div>
- 
+
+    <!-- Buttons -->
     <div id="button-container">
-        <button href="#" onclick="showChart('Histogram')">Histogram</button>
+        <button onclick="showChart('Histogram')">Histogram</button>
         <button onclick="showChart('BarChart')">Bar Chart</button>
         <button onclick="showChart('Heatmap')">Heat Map</button>
-        <button onclick="showChart('Piechart')">Pie Chart</button>
-    </div>     
-</body>
+        <button onclick="renderPieChart()">Pie Chart</button>
+    </div>
 
-<footer>
-    <p>2024 Red Ocelot. All rights reserved.</p>
-</footer>
+    <!-- Pie Chart Container -->
+    <div id="pieChart" style="width: 600px; height: 400px; margin-top: 20px;"></div>
+
+    <footer>
+        <p>2024 Red Ocelot. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Render the pie chart for the selected repository
+        async function renderPieChart() {
+            const currentRepoName = document.getElementById('multioptions').value;
+            try {
+                const plotData = await getPlots(currentRepoName); 
+                createPieChart(plotData, "pieChart");
+            } catch (error) {
+                console.error("Error rendering pie chart:", error);
+            }
+        }
+
+        // Populate the repository dropdown dynamically
+        async function populateDropDown() {
+            try {
+                const repoNameData = await getRepoNames(); // Fetch repository names
+                const select = document.getElementById("multioptions");
+
+                // Add options to the dropdown
+                repoNameData.forEach(repo => {
+                    const option = document.createElement('option');
+                    option.text = repo.name; // Repository name
+                    option.value = repo.name; // Value of the option
+                    select.appendChild(option);
+                });
+
+                console.log('Dropdown populated successfully.');
+            } catch (error) {
+                console.error("Error populating dropdown:", error);
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener("DOMContentLoaded", () => {
+            populateDropDown(); // Populate the dropdown when the page loads
+        });
+    </script>
+</body>
 </html>

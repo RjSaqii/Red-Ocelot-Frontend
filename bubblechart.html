@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Chart</title>
+</head>
+
+<body>
+    <h1>test</h1>
+    <script src="./script/script.js">
+    </script>
+    <select name="multioptions" id="multioptions"></select>
+    <select name="authors" id="authors"></select>
+
+    <!-- The page will render the pie chart later, the function just needs to be here to exist -->
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script>
+        async function renderbubblechart(repoName) {
+
+            // Get the currently selected repository name
+            const currentRepoName = document.getElementById("multioptions").value;
+
+            // try {
+            // Fetch plot data from the API
+            var plotData = await getbubblechart(currentRepoName); // Uses the getPlots function
+            
+            console.log(plotData)
+            // Create the pie chart
+            createChart(plotData, "pieChart", "bubble"); // Render the chart in the #pieChart element
+            // } catch (error) {
+            //     console.error("Error rendering pie chart:", error);
+            // }
+        }
+
+        renderbubblechart()
+    </script>
+
+    <div id="pieChart"></div>
+
+
+
+</body>
+
+</html>

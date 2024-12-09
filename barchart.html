@@ -18,17 +18,17 @@
     <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <script>
-        async function renderPieChart(repoName) {
+        async function renderBarChart(repoName) {
     
             // Get the currently selected repository name
             const currentRepoName = document.getElementById("multioptions").value;
 
             try {
                 // Fetch plot data from the API
-                const plotData = await getPlots(currentRepoName); // Uses the getPlots function
+                const plotData = await getBarPlots(currentRepoName); // Uses the getPlots function
 
                 // Create the pie chart
-                createChart(plotData, "pieChart","pie"); // Render the chart in the #pieChart element
+                createChart(plotData, "pieChart", "bar"); // Render the chart in the #pieChart element
             } catch (error) {
                 console.error("Error rendering pie chart:", error);
             }
@@ -54,7 +54,7 @@
             }
             // Render pie chart for the first repository by default
             if (repoNameData.length > 0) {
-                    await renderPieChart();
+                    await renderBarChart();
                 }
         }
          
@@ -90,7 +90,7 @@
     repoOptions.addEventListener('change', function(event){
         authorOptions.options.length = 0
         populateAuthorsDropDown()
-        renderPieChart()
+        renderBarChart()
     })
     </script>
 

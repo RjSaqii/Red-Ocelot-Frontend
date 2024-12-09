@@ -61,21 +61,30 @@ async function getPlots(repoName) {
     const data = await sendPostRequest("piechart",{reponame:repoName});
     return data
 }
+// function to get plots from backend, plots will be used to generate pie chart using plotly
+async function getHistogram(repoName,start_date,end_date) {
+    const data = await sendPostRequest("histogram",{reponame:repoName,start_date, end_date});
+    return data
+}
 
+async function getBarPlots(repoName) {
+    const data = await sendPostRequest("barchart",{reponame:repoName});
+    return data
+}
 //Function to create pie chart using plotly data
-function createPieChart(plotData, targetElementId) {
+function createChart(plotData, targetElementId,chartType) {
     plotData = JSON.parse(plotData)
     // Parse the data and layout from the plotData
     const data = plotData.data; // Extract the data array
     const layout = plotData.layout; // Extract the layout object
-
+    console.log("logging chart data")
     console.log(data)
     console.log(layout)
 
     console.log(typeof plotData)
 
     // Ensure 'type' is explicitly set to 'pie'
-    data.forEach(trace => {trace.type = "pie"});
+    data.forEach(trace => {trace.type = chartType});
 
     // Use Plotly to render the pie chart in the specified HTML element
     Plotly.newPlot(targetElementId, data, layout);

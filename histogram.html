@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Chart</title>
+</head>
+
+<body>
+    <h1>test</h1>
+    <script src="./script/script.js">
+    </script>
+    <select name="multioptions" id="multioptions"></select>
+    <select name="authors" id="authors"></select>
+
+    <input type="date" id="startDate" name="startDate">
+    <input type="date" id="endDate" name="endDate">
+
+    <script>
+        // Function to set the date inputs to today's date
+        function setDefaultDates() {
+            const firstDate = new Date();
+            firstDate.setFullYear(2018, 11, 11)
+            const secondDate = new Date();
+            const fomattedFirstDate = firstDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+            const formattedSecondDate = secondDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+
+            console.log(firstDate)
+            // Set the default value of the date inputs
+            document.getElementById("startDate").value = fomattedFirstDate;
+            document.getElementById("endDate").value = formattedSecondDate;
+
+            document.getElementById("startDate").addEventListener('change', function (event) {
+                authorOptions.options.length = 0
+                populateAuthorsDropDown()
+                renderHistogram()
+            })
+            document.getElementById("endDate").addEventListener('change', function (event) {
+                authorOptions.options.length = 0
+                populateAuthorsDropDown()
+                renderHistogram()
+            })
+        }
+
+        // Call the function when the page loads
+        window.onload = function () {
+            setDefaultDates();
+        };
+    </script>
+
+    <!-- The page will render the pie chart later, the function just needs to be here to exist -->
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script>
+        async function renderHistogram(repoName) {
+
+            // Get the currently selected repository name
+            const currentRepoName = document.getElementById("multioptions").value;
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
+
+            try {
+                // Fetch plot data from the API
+                const plotData = await getHistogram(currentRepoName, startDate, endDate); // Uses the getPlots function
+
+                // Create the pie chart
+                createChart(plotData, "pieChart", "histogram"); // Render the chart in the #pieChart element
+            } catch (error) {
+                console.error("Error rendering pie chart:", error);
+            }
+        }
+
+        async function populateDropDown() {
+            var repoNameData = await getRepoNames()
+
+
+            var parent = document.body
+            let select = document.getElementById("multioptions")
+
+
+            for (let i = 0; i < repoNameData.length; i++) {
+                const repoName = repoNameData[i].name;
+
+                let option = document.createElement('option')
+                option.text = repoName
+                option.value = repoName
+                option.setAttribute("id", "multioptions")
+
+                select.appendChild(option)
+            }
+            // Render pie chart for the first repository by default
+            if (repoNameData.length > 0) {
+                await renderHistogram();
+            }
+        }
+
+
+
+
+
+        async function populateAuthorsDropDown() {
+            var currentRepoName = document.getElementById("multioptions").value
+            var authorData = await getAuthors(currentRepoName)
+            console.log(authorData)
+
+            var parent = document.body
+            let select = document.getElementById("authors")
+
+            for (let i = 0; i < authorData.length; i++) {
+                const author = authorData[i].author;
+
+                let option = document.createElement('option')
+                option.text = author
+                option.value = author
+                option.setAttribute("id", "multioptions")
+
+                select.appendChild(option)
+            }
+        }
+        populateDropDown().then(() => {
+            populateAuthorsDropDown()
+        });
+
+        let repoOptions = document.getElementById("multioptions")
+        let authorOptions = document.getElementById("authors")
+        repoOptions.addEventListener('change', function (event) {
+            authorOptions.options.length = 0
+            populateAuthorsDropDown()
+            renderHistogram()
+        })
+
+    </script>
+
+    <div id="pieChart"></div>
+
+
+
+</body>
+
+</html>

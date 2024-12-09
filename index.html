@@ -1,26 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/stylesheet.css">
-    <title> Red Ocelot</title> 
+    <title>Red Ocelot</title>
+</head>
 
+<body>
+    <!-- Navbar -->
     <nav class="navbar">
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
         <div class="navbar-brand">
             <div id="dropdown-container">
-                <label for="repo-dropdown"><span class="white-text">Select the Repository</span></label>
-                <select id="repo-dropdown">
-                    <option value="Cobol2XML">Cobol2XML</option>
-                    <option value="dubbo">dubbo</option>
-                    <option value="fhir-data-pipes">fhir-data-pipes</option>
+                <script src="./script/script.js"></script>
+                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
+                <select id="multioptions" name="multioptions">
                 </select>
+                <label for="authors"><span class="white-text">Select the Author:</span></label>
+                <select name="authors" id="authors"></select>
             </div>
+            <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         </div>    
     </nav>
-</head>
-
-<body>
+    <!-- Main Content -->
     <div class="main-content">
         <h1><strong>Unlock Insight into Your Database</strong></h1>
         <h3>Explore Source Code Metrics and Commit Histories</h3>
@@ -30,15 +33,98 @@
             and compare repositories to gain a better understanding of your source code.
         </p>
     </div>
- 
+
+    <!-- Buttons -->
     <div id="button-container">
-        <button href="#" onclick="showChart('Histogram')">Histogram</button>
+        <button onclick="showChart('Histogram')">Histogram</button>
         <button onclick="showChart('BarChart')">Bar Chart</button>
         <button onclick="showChart('Heatmap')">Heat Map</button>
-        <button onclick="showChart('Piechart')">Pie Chart</button>
-    </div>     
-</body>
+        <button onclick="renderPieChart()">Pie Chart</button>
+    </div>
 
+    <!-- Pie Chart Container -->
+    <div id="pieChart" style="width: 600px; height: 400px; margin-top: 20px;"></div>
+
+    
+
+    <script>
+        // Render the pie chart for the selected repository
+        async function renderPieChart(repoName) {
+    
+            // Get the currently selected repository name
+            const currentRepoName = document.getElementById("multioptions").value;
+
+         try {
+            // Fetch plot data from the API
+            const plotData = await getPlots(currentRepoName); // Uses the getPlots function
+
+            // Create the pie chart
+            createPieChart(plotData, "pieChart"); // Render the chart in the #pieChart element
+        } catch (error) {
+        console.error("Error rendering pie chart:", error);
+        }
+    }
+
+        // Populate the repository dropdown dynamically
+        async function populateDropDown() {
+            var repoNameData = await getRepoNames()
+
+
+            var parent = document.body
+            let select = document.getElementById("multioptions")
+
+
+            for (let i = 0; i < repoNameData.length; i++) {
+                const repoName = repoNameData[i].name;
+
+                let option = document.createElement('option')
+                option.text = repoName
+                option.value = repoName
+                option.setAttribute("id", "multioptions")
+
+                select.appendChild(option)
+            }
+            // Render pie chart for the first repository by default
+            if (repoNameData.length > 0) {
+                    await renderPieChart();
+                }
+        }
+        async function populateAuthorsDropDown() {
+            var currentRepoName = document.getElementById("multioptions").value
+            var authorData = await getAuthors(currentRepoName)
+            console.log(authorData)
+
+            var parent = document.body
+            let select = document.getElementById("authors")
+
+                for (let i = 0; i < authorData.length; i++) {
+                    const author = authorData[i].author;
+
+                    let option = document.createElement('option')
+                    option.text = author
+                    option.value = author
+                    option.setAttribute("id", "multioptions")
+
+                    select.appendChild(option)
+                }
+            }
+    populateDropDown().then(()=>{
+        populateAuthorsDropDown()
+    });
+
+    let repoOptions = document.getElementById("multioptions")
+    let authorOptions = document.getElementById("authors")
+    repoOptions.addEventListener('change', function(event){
+        authorOptions.options.length = 0
+        populateAuthorsDropDown()
+        renderPieChart()
+    })
+    </script>
+
+    <div id="pieChart"></div>
+        
+    </script>
+</body>
 <footer>
     <p>2024 Red Ocelot. All rights reserved.</p>
 </footer>

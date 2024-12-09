@@ -71,6 +71,11 @@ async function getBarPlots(repoName) {
     const data = await sendPostRequest("barchart",{reponame:repoName});
     return data
 }
+async function getbubblechart() {
+    const data = await sendGetRequest("bubblechart");
+    return data
+    
+}
 //Function to create pie chart using plotly data
 function createChart(plotData, targetElementId,chartType) {
     plotData = JSON.parse(plotData)

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Chart</title>
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script defer src="./script/script.js"></script>
+</head>
+
+<body>
+    <h1>Pie Chart Visualization</h1>
+
+    <!-- Dropdown for selecting repositories -->
+    <div>
+        <label for="multioptions">Select Repository:</label>
+        <select name="multioptions" id="multioptions"></select>
+    </div>
+
+    <!-- Container for the pie chart -->
+    <div id="pieChart" style="width: 600px; height: 400px; margin: auto;"></div>
+
+    <!-- JavaScript -->
+    <script>
+        // Render the pie chart
+        async function renderPieChart() {
+            const currentRepoName = document.getElementById("multioptions").value;
+
+            try {
+                const plotData = await getPlots(currentRepoName); // Fetch data for the pie chart
+                createChart(plotData, "pieChart", "pie"); // Render the chart
+            } catch (error) {
+                console.error("Error rendering pie chart:", error);
+            }
+        }
+
+        // Populate dropdown with repositories
+        async function populateDropDown() {
+            const repoNameData = await getRepoNames();
+            const select = document.getElementById("multioptions");
+
+            // Clear existing options
+            select.innerHTML = '';
+
+            // Populate dropdown
+            repoNameData.forEach(repo => {
+                const option = document.createElement("option");
+                option.textContent = repo.name;
+                option.value = repo.name;
+                select.appendChild(option);
+            });
+
+            // Render pie chart for the first repository by default
+            if (repoNameData.length > 0) {
+                await renderPieChart();
+            }
+        }
+
+        // Initialize dropdown and pie chart on page load
+        document.addEventListener("DOMContentLoaded", async () => {
+            await populateDropDown();
+
+            const repoOptions = document.getElementById("multioptions");
+            repoOptions.addEventListener("change", renderPieChart);
+        });
+    </script>
+
+    <div id="pieChart"></div>
+
+</body>
+</html>

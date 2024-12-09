@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style/stylesheet.css">
+    <script src="./script/script.js"></script>
     <title>Red Ocelot</title>
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
@@ -13,16 +15,12 @@
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
         <div class="navbar-brand">
             <div id="dropdown-container">
-                <script src="./script/script.js"></script>
                 <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
-                <select id="multioptions" name="multioptions">
-                </select>
-                <label for="authors"><span class="white-text">Select the Author:</span></label>
-                <select name="authors" id="authors"></select>
+                <select id="multioptions" name="multioptions"></select>
             </div>
-            <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        </div>    
+        </div>
     </nav>
+    
     <!-- Main Content -->
     <div class="main-content">
         <h1><strong>Unlock Insight into Your Database</strong></h1>
@@ -36,96 +34,111 @@
 
     <!-- Buttons -->
     <div id="button-container">
+        <button onclick="renderPieChart()">Pie Chart</button>
         <button onclick="showChart('Histogram')">Histogram</button>
         <button onclick="showChart('BarChart')">Bar Chart</button>
         <button onclick="showChart('Heatmap')">Heat Map</button>
-        <button onclick="renderPieChart()">Pie Chart</button>
     </div>
 
     <!-- Pie Chart Container -->
     <div id="pieChart" style="width: 600px; height: 400px; margin-top: 20px;"></div>
 
-    
-
-    <script>
-        // Render the pie chart for the selected repository
-        async function renderPieChart(repoName) {
-    
-            // Get the currently selected repository name
-            const currentRepoName = document.getElementById("multioptions").value;
-
-         try {
-            // Fetch plot data from the API
-            const plotData = await getPlots(currentRepoName); // Uses the getPlots function
-
-            // Create the pie chart
-            createPieChart(plotData, "pieChart"); // Render the chart in the #pieChart element
-        } catch (error) {
-        console.error("Error rendering pie chart:", error);
-        }
-    }
-
-        // Populate the repository dropdown dynamically
-        async function populateDropDown() {
-            var repoNameData = await getRepoNames()
-
-
-            var parent = document.body
-            let select = document.getElementById("multioptions")
-
-
-            for (let i = 0; i < repoNameData.length; i++) {
-                const repoName = repoNameData[i].name;
-
-                let option = document.createElement('option')
-                option.text = repoName
-                option.value = repoName
-                option.setAttribute("id", "multioptions")
-
-                select.appendChild(option)
-            }
-            // Render pie chart for the first repository by default
-            if (repoNameData.length > 0) {
-                    await renderPieChart();
+            <!-- JavaScript -->
+            <script>
+                // Fetch repository names
+                async function getRepoNames() {
+                    return await sendGetRequest('getreponames'); // Replace with your actual API call
                 }
-        }
-        async function populateAuthorsDropDown() {
-            var currentRepoName = document.getElementById("multioptions").value
-            var authorData = await getAuthors(currentRepoName)
-            console.log(authorData)
-
-            var parent = document.body
-            let select = document.getElementById("authors")
-
-                for (let i = 0; i < authorData.length; i++) {
-                    const author = authorData[i].author;
-
-                    let option = document.createElement('option')
-                    option.text = author
-                    option.value = author
-                    option.setAttribute("id", "multioptions")
-
-                    select.appendChild(option)
+    
+                // Fetch authors by repository
+                async function getAuthors(repoName) {
+                    return await sendPostRequest('authorsbyreponame', { reponame: repoName }); // Replace with your API call
                 }
-            }
-    populateDropDown().then(()=>{
-        populateAuthorsDropDown()
-    });
+    
+                // Fetch pie chart data
+                async function getPlots(repoName) {
+                    return await sendPostRequest('piechart', { reponame: repoName }); // Replace with your API call
+                }
+    
+                // Create pie chart
+                function createPieChart(plotData, targetElementId) {
+                    const parsedData = JSON.parse(plotData);
+                    const data = parsedData.data;
+                    const layout = parsedData.layout;
+    
+                    // Ensure 'type' is set to 'pie'
+                    data.forEach(trace => trace.type = 'pie');
+    
+                    // Render chart with Plotly
+                    Plotly.newPlot(targetElementId, data, layout);
+                }
+    
+                // Render the pie chart
+                async function renderPieChart() {
+                    const currentRepoName = document.getElementById('multioptions').value;
+    
+                    try {
+                        const plotData = await getPlots(currentRepoName);
+                        createPieChart(plotData, 'pieChart');
+                    } catch (error) {
+                        console.error('Error rendering pie chart:', error);
+                    }
+                }
+    
+                // Populate dropdown with repositories
+                async function populateDropDown() {
+                    const repoNameData = await getRepoNames();
+                    const select = document.getElementById('multioptions');
+    
+                    // Clear existing options
+                    select.innerHTML = '';
+    
+                    // Populate with new options
+                    repoNameData.forEach(repo => {
+                        const option = document.createElement('option');
+                        option.text = repo.name;
+                        option.value = repo.name;
+                        select.appendChild(option);
+                    });
+    
+                    // Render the pie chart for the first repository by default
+                    if (repoNameData.length > 0) {
+                        await renderPieChart();
+                    }
+                }
+    
+                // Populate authors dropdown dynamically
+                async function populateAuthorsDropDown() {
+                    const currentRepoName = document.getElementById('multioptions').value;
+                    const authorData = await getAuthors(currentRepoName);
+                    const select = document.getElementById('authors');
+    
+                    // Clear existing options
+                    select.innerHTML = '';
+    
+                    // Populate with authors
+                    authorData.forEach(author => {
+                        const option = document.createElement('option');
+                        option.text = author.author;
+                        option.value = author.author;
+                        select.appendChild(option);
+                    });
+                }
+    
+                // Initialize dropdowns and event listeners
+                document.addEventListener('DOMContentLoaded', async () => {
+                    await populateDropDown();
+    
+                    const repoOptions = document.getElementById('multioptions');
+                    repoOptions.addEventListener('change', async () => {
+                        await populateAuthorsDropDown();
+                        await renderPieChart();
+                    });
+                });
+            </script>
 
-    let repoOptions = document.getElementById("multioptions")
-    let authorOptions = document.getElementById("authors")
-    repoOptions.addEventListener('change', function(event){
-        authorOptions.options.length = 0
-        populateAuthorsDropDown()
-        renderPieChart()
-    })
-    </script>
-
-    <div id="pieChart"></div>
-        
-    </script>
 </body>
-<footer>
-    <p>2024 Red Ocelot. All rights reserved.</p>
-</footer>
+    <footer>
+        <p>2024 Red Ocelot. All rights reserved.</p>
+    </footer>
 </html>

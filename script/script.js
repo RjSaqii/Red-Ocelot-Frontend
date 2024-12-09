@@ -1,23 +1,23 @@
 const API_URL = 'http://localhost:8000';
 //use these to connect
-async function sendGetRequest(endpoint) {
-    try {
-        const response = await fetch(`${API_URL}/${endpoint}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-    });
-    
-    if (!response.ok) {
-        throw new Error(`GET request failed: ${response.status} -
-        ${response.statusText}`);
-    }
-    return await response.json();
-    
-    } 
-    catch (error) {
-        console.error('Error in GET request:', error);
-        throw error;
-    }
+    async function sendGetRequest(endpoint) {
+        try {
+            const response = await fetch(`${API_URL}/${endpoint}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+        
+        if (!response.ok) {
+            throw new Error(`GET request failed: ${response.status} -
+            ${response.statusText}`);
+        }
+        return await response.json();
+        
+        } 
+        catch (error) {
+            console.error('Error in GET request:', error);
+            throw error;
+        }
 }
 
 async function sendPostRequest(endpoint, data) {

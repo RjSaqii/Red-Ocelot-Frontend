@@ -126,5 +126,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('pieChartBtn').addEventListener('click', showPieChartSection);
 });
 
+// Function to go back to the main page
+function goToMainPage() {
+    // Hide the chart section
+    document.getElementById('pieChartSection').classList.add('hidden');
 
+    // Show the main content and button container
+    document.querySelector('.main-content').classList.remove('hidden');
+    document.getElementById('button-container').classList.remove('hidden');
+}
 
+// Add event listener to the Back button
+document.getElementById('backButton').addEventListener('click', goToMainPage);

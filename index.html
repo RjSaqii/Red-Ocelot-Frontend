@@ -36,9 +36,87 @@
     <div id="button-container">
         <button id="pieChartBtn">Pie Chart</button>
         <button onclick="showChart('Histogram')">Histogram</button>
-        <button onclick="showChart('BarChart')">Bar Chart</button>
+        <button id="barChartBtn">Bar Chart</button>
         <button onclick="showChart('Heatmap')">Heat Map</button>
     </div>
+    <!-- Bar Chart -->
+    <div id="barChartSection" class="hidden">
+        <h1>Bar Chart Visualization</h1>
+        <div id="barChart" style="width: 600px; height: 400px; margin: auto;"></div>
+    </div>
+
+     <!-- JavaScript -->
+     <script>
+        // Show Pie Chart Section and Hide Others
+        function showBarChartSection() {
+            document.querySelector('.main-content').classList.add('hidden');
+            document.getElementById('button-container').classList.add('hidden');
+            document.getElementById('barChartSection').classList.remove('hidden');
+            renderBarChart();
+        }   
+
+            document.getElementById('barChartBtn').addEventListener('click', showBarChartSection);
+
+             async function renderBarChart(repoName) {
+    
+            // Get the currently selected repository name
+            const currentRepoName = document.getElementById("multioptions").value;
+
+        try {
+            // Fetch plot data from the API
+            const plotData = await getBarPlots(currentRepoName); // Uses the getPlots function
+
+            // Create the bar chart
+            createChart(plotData, "barChart", "bar"); // Render the chart in the #barChart element
+        } catch (error) {
+            console.error("Error rendering bar chart:", error);
+     }
+    }
+
+        // Fetch repository names
+        async function getRepoNames() {
+            return await sendGetRequest('getreponames'); // Replace with your actual API call
+        }
+
+        // Fetch authors by repository
+        async function getAuthors(repoName) {
+            return await sendPostRequest('authorsbyreponame', { reponame: repoName }); // Replace with your API call
+        }
+
+        async function getBarPlots(repoName) {
+        const data = await sendPostRequest("barchart",{reponame:repoName});
+        return data
+        }
+        function createBarChart(plotData, targetElementId) {
+                    const parsedData = JSON.parse(plotData);
+                    const data = parsedData.data;
+                    const layout = parsedData.layout;
+    
+                    // Ensure 'type' is set to 'bar'
+                    data.forEach(trace => trace.type = 'bar');
+    
+                    // Render chart with Plotly
+                    Plotly.newPlot(targetElementId, data, layout);
+                }   
+
+                async function renderBarChart(repoName) {
+    
+                // Get the currently selected repository name
+                const currentRepoName = document.getElementById("multioptions").value;
+
+                try {
+                // Fetch plot data from the API
+                const plotData = await getBarPlots(currentRepoName); // Uses the getPlots function
+
+                // Create the bar chart
+                 createChart(plotData, "barChart", "bar"); // Render the chart in the #barChart element
+                } catch (error) {
+                  console.error("Error rendering bar chart:", error);
+                }
+            }
+        </script>
+
+
 
     <!-- Pie Chart Container -->
     <div id="pieChartSection" class="hidden">
@@ -117,6 +195,7 @@
                     // Render the pie chart for the first repository by default
                     if (repoNameData.length > 0) {
                         await renderPieChart();
+                        await renderBarChart();
                     }
                 }
     
@@ -127,6 +206,7 @@
                     const repoOptions = document.getElementById('multioptions');
                     repoOptions.addEventListener('change', async () => {
                         await renderPieChart();
+                        await renderBarChart();
                     });
                 });
 

@@ -4,12 +4,12 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Poppins, sans-serif;
-    background-color: #111111;
     color: #e5e5e5;
 }
 
 /* Body Styling */
 body {
+    background-color: #111111;
     line-height: 1.6;    
     display: flex; 
     flex-direction: column; 
@@ -29,7 +29,6 @@ body > * {
 
 /* Navbar Styling */
 .navbar {
-    background-color: #111111;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -61,26 +60,57 @@ body > * {
     color: #fff;
 }
 
-/* Dropdown Styling */
+/* Dropdown Container */
 #dropdown-container {
     display: flex;
     align-items: center;
     margin-right: 20px; 
+    font-size: 1em; /* Ensure consistent text size */
+    gap: 10px; /* Add spacing between label and dropdown */
 }
 
-#repo-dropdown {
-    margin-left: 10px; 
-    padding: 5px 10px;
-    font-size: 16px;
-    border: 1px solid #e5e5e5; 
-    background-color: #333333; 
-    color: #e5e5e5;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+/* Dropdown Styling */
+#multioptions {
+    padding: 10px;
+    font-size: 1em;
+    border: 2px solid #E63946; /* Modern border with an accent color */
+    border-radius: 8px; /* Rounded corners for a modern look */
+    background-color: #222222; /* Slightly lighter than the navbar for contrast */
+    color: #e5e5e5; /* Ensure text is visible */
+    cursor: pointer; /* Change cursor to indicate interactivity */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
-#repo-dropdown:hover {
-    background-color: #444444; 
+/* Hover Effect */
+#multioptions:hover {
+    background-color: #333333; /* Slightly lighter for hover effect */
+    border-color: #5CDB95; /* Change border color on hover */
+}
+
+/* Focused Dropdown */
+#multioptions:focus {
+    outline: none; /* Remove default browser outline */
+    border-color: #F5A623; /* Highlight border when focused */
+    box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.6); /* Add glow effect */
+}
+
+/* Label Styling */
+#dropdown-container label {
+    font-weight: bold; /* Emphasize label */
+    color: #e5e5e5; /* Match the overall theme */
+}
+
+/* Dropdown Arrow Customization */
+#multioptions {
+    appearance: none; /* Remove default browser arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23e5e5e5' d='M10 12l-6-6h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 1em;
+    padding-right: 30px; /* Add padding for custom arrow */
 }
 
 /* Main Content Styling */
@@ -141,6 +171,31 @@ body > * {
 .white-text {
     color: #e5e5e5;
 }
+
+#pieChart {
+    background-color: #111111; /* Match the page background */
+    color: #e5e5e5; /* Set text color */
+    padding: 20px; /* Add some padding for better spacing */
+    border-radius: 10px; /* Optional for a rounded look */
+    display: block; /* Ensure it’s visible */
+    width: 100%; /* Ensure responsiveness */
+    max-width: 800px; /* Limit the width */
+    margin: 0 auto; /* Center the chart */
+    z-index: 10; /* Ensure it’s on top */
+}
+
+/* New class to hide elements */
+.hidden {
+    display: none;
+}
+
+/* Ensure Pie Chart Section visibility */
+#pieChartSection h1 {
+    text-align: center;
+    color: #F5A623;
+    margin-bottom: 20px;
+}
+
 
 /* Footer Styling */
 footer {

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/stylesheet.css">
-    <script src="./script/script.js"></script>
-    <title>Red Ocelot</title>
-    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style/stylesheet.css">
+        <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script defer src="./script/script.js"></script>
+        <title>Red Ocelot</title>
+    </head>
 
 <body>
     <!-- Navbar -->
@@ -34,17 +34,30 @@
 
     <!-- Buttons -->
     <div id="button-container">
-        <button onclick="renderPieChart()">Pie Chart</button>
+        <button id="pieChartBtn">Pie Chart</button>
         <button onclick="showChart('Histogram')">Histogram</button>
         <button onclick="showChart('BarChart')">Bar Chart</button>
         <button onclick="showChart('Heatmap')">Heat Map</button>
     </div>
 
     <!-- Pie Chart Container -->
-    <div id="pieChart" style="width: 600px; height: 400px; margin-top: 20px;"></div>
+    <div id="pieChartSection" class="hidden">
+        <h1>Pie Chart Visualization</h1>
+        <div id="pieChart" style="width: 600px; height: 400px; margin: auto;"></div>
+    </div>
 
             <!-- JavaScript -->
             <script>
+                // Show Pie Chart Section and Hide Others
+                function showPieChartSection() {
+                    document.querySelector('.main-content').classList.add('hidden');
+                    document.getElementById('button-container').classList.add('hidden');
+                    document.getElementById('pieChartSection').classList.remove('hidden');
+                    renderPieChart();
+                }   
+
+                document.getElementById('pieChartBtn').addEventListener('click', showPieChartSection);
+
                 // Fetch repository names
                 async function getRepoNames() {
                     return await sendGetRequest('getreponames'); // Replace with your actual API call
@@ -107,34 +120,17 @@
                     }
                 }
     
-                // Populate authors dropdown dynamically
-                async function populateAuthorsDropDown() {
-                    const currentRepoName = document.getElementById('multioptions').value;
-                    const authorData = await getAuthors(currentRepoName);
-                    const select = document.getElementById('authors');
-    
-                    // Clear existing options
-                    select.innerHTML = '';
-    
-                    // Populate with authors
-                    authorData.forEach(author => {
-                        const option = document.createElement('option');
-                        option.text = author.author;
-                        option.value = author.author;
-                        select.appendChild(option);
-                    });
-                }
-    
                 // Initialize dropdowns and event listeners
                 document.addEventListener('DOMContentLoaded', async () => {
                     await populateDropDown();
     
                     const repoOptions = document.getElementById('multioptions');
                     repoOptions.addEventListener('change', async () => {
-                        await populateAuthorsDropDown();
                         await renderPieChart();
                     });
                 });
+
+                
             </script>
 
 </body>

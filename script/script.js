@@ -99,6 +99,15 @@ function createChart(plotData, targetElementId, chartType) {
     }
 }
 
+// Function to Show Bar Chart Section
+function showBarChartSection() {
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('button-container').classList.add('hidden');
+    document.getElementById('barChartSection').classList.remove('hidden');
+    renderBarChart();
+}
+    document.getElementById('barChartBtn').addEventListener('click', showBarChartSection);
+
 // Function to Show Pie Chart Section
 function showPieChartSection() {
     document.getElementById('main-content').classList.add('hidden');

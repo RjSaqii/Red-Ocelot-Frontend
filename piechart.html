@@ -18,6 +18,7 @@
         <select name="multioptions" id="multioptions"></select>
     </div>
 
+    
     <!-- Container for the pie chart -->
     <div id="pieChart" style="width: 600px; height: 400px; margin: auto;"></div>
 
@@ -26,6 +27,7 @@
         // Render the pie chart
         async function renderPieChart() {
             const currentRepoName = document.getElementById("multioptions").value;
+            
 
             try {
                 const plotData = await getPlots(currentRepoName); // Fetch data for the pie chart

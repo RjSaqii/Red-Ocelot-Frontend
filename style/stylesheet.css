@@ -64,9 +64,9 @@ body > * {
 #dropdown-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin-right: 20px; 
     font-size: 1em; 
-    gap: 10px; 
 }
 
 /* Dropdown Styling */
@@ -111,6 +111,13 @@ body > * {
     background-position: right 10px center;
     background-size: 1em;
     padding-right: 30px; 
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #5CDB95;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Main Content Styling */
@@ -178,9 +185,10 @@ body > * {
     padding: 20px; 
     border-radius: 10px; 
     display: block; 
-    width: 100%; 
-    max-width: 800px; 
-    margin: 0 auto; 
+    width: 90%; 
+    max-width: 1000px; 
+    height: 500px;
+    margin: auto; 
     z-index: 10; 
 }
 
@@ -207,6 +215,7 @@ body > * {
     border-radius: 5px;
     cursor: pointer;
     display: block;
+    margin: 30px auto;
     text-align: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -277,6 +286,65 @@ input[type="date"] {
     background-color: #F5A623;
     transform: scale(1.05);
 }
+
+/* Pie Chart Styling */
+#pieChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    height: 500px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Chart Container Styling */
+#histogramChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    height: 500px; /* Fixed height for consistency */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#barChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto; /* Centers the chart horizontally */
+    width: 90%;
+    max-width: 800px; /* Limits the chart's width */
+    height: 500px; /* Sets the height of the chart */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bubbleChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto; /* Centers the chart horizontally */
+    width: 90%;
+    max-width: 800px; /* Restricts the chart's width */
+    height: 500px; /* Defines a consistent height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 /* Footer Styling */
 footer {

@@ -67,35 +67,44 @@ async function getbubblechart() {
     return data
     
 }
-//Function to create pie chart using plotly data
+
 function createChart(plotData, targetElementId, chartType) {
     try {
         if (typeof plotData !== 'object') plotData = JSON.parse(plotData);
-        const data = plotData.data;
-        const layout = plotData.layout || {};
-        
-        // Ensure proper layout for dark background
-        layout.paper_bgcolor = '#111111'; // Background of the entire chart
-        layout.plot_bgcolor = '#111111'; // Background of the plot area
-        layout.font = {
-            color: '#e5e5e5', // Set text color for labels and titles
+
+        const data = plotData.data.map((trace) => ({
+            ...trace,
+            type: chartType,
+        }));
+
+        const layout = {
+            ...plotData.layout,
+            title: {
+                text: 'Author Commit Distribution',
+                font: { size: 18, color: '#e5e5e5' },
+                x: 0.5, // Center the title
+            },
+            paper_bgcolor: '#222222',
+            plot_bgcolor: '#111111',
+            font: { color: '#e5e5e5' },
+            margin: { l: 50, r: 50, t: 50, b: 50 }, // Add padding around the chart
+            legend: {
+                orientation: 'h', // Horizontal legend
+                x: 0.5,
+                xanchor: 'center',
+                y: -0.2, // Position below the chart
+            },
+            height: 400, // Fixed chart height
+            width: 700, // Fixed chart width
         };
-        
-        // Set grid lines to blend better with dark backgrounds
-        if (!layout.xaxis) layout.xaxis = {};
-        if (!layout.yaxis) layout.yaxis = {};
-        layout.xaxis.showgrid = false;
-        layout.yaxis.showgrid = false;
 
-        // Ensure 'type' is explicitly set to chartType
-        data.forEach(trace => {
-            trace.type = chartType;
-        });
+        // Clear the container before rendering a new chart
+        Plotly.purge(targetElementId);
 
-        // Render the chart with Plotly
+        // Render the chart
         Plotly.newPlot(targetElementId, data, layout);
     } catch (error) {
-        console.error("Error creating chart:", error);
+        console.error('Error creating chart:', error);
     }
 }
 

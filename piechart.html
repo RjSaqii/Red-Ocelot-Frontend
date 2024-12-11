@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pie Chart</title>
-    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script defer src="./script/script.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style/stylesheet.css">
+        <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script defer src="./script/script.js"></script>
+        <title>Red Ocelot</title>
+    </head>
 
 <body>
-    <h1>Pie Chart Visualization</h1>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
+        <div class="navbar-brand">
+            <div id="dropdown-container">
+                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
+                <select id="multioptions" name="multioptions"></select>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Dropdown for selecting repositories -->
-    <div>
-        <label for="multioptions">Select Repository:</label>
-        <select name="multioptions" id="multioptions"></select>
-    </div>
+    <h1>Pie Chart Visualisation</h1>
 
     <!-- Container for the pie chart -->
-    <div id="pieChart" style="width: 600px; height: 400px; margin: auto;"></div>
+    <div id="pieChart"></div>
 
     <!-- JavaScript -->
     <script>
@@ -65,8 +70,9 @@
             repoOptions.addEventListener("change", renderPieChart);
         });
     </script>
-
-    <div id="pieChart"></div>
-
+    
 </body>
+<footer>
+    <p>2024 Red Ocelot. All rights reserved.</p>
+</footer>
 </html>

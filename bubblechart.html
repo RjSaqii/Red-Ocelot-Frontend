@@ -4,44 +4,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pie Chart</title>
+    <link rel="stylesheet" href="style/stylesheet.css">
+    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script defer src="./script/script.js"></script>
+    <title>Red Ocelot</title>
 </head>
 
 <body>
-    <h1>test</h1>
-    <script src="./script/script.js">
-    </script>
-    <select name="multioptions" id="multioptions"></select>
-    <select name="authors" id="authors"></select>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
+        <div class="navbar-brand">
+            <div id="dropdown-container">
+                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
+                <select id="multioptions" name="multioptions"></select>
+            </div>
+        </div>
+    </nav>
 
-    <!-- The page will render the pie chart later, the function just needs to be here to exist -->
-    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <h1>Bubble Chart Visualization</h1>
 
+    <!-- Container for the bubble chart -->
+    <div id="bubbleChart"></div>
+
+    <!-- JavaScript -->
     <script>
-        async function renderbubblechart(repoName) {
-
-            // Get the currently selected repository name
+        async function renderBubbleChart() {
             const currentRepoName = document.getElementById("multioptions").value;
 
-            // try {
-            // Fetch plot data from the API
-            var plotData = await getbubblechart(currentRepoName); // Uses the getPlots function
-            
-            console.log(plotData)
-            // Create the pie chart
-            createChart(plotData, "pieChart", "bubble"); // Render the chart in the #pieChart element
-            // } catch (error) {
-            //     console.error("Error rendering pie chart:", error);
-            // }
+            try {
+                const plotData = await getbubblechart(currentRepoName);
+                createChart(plotData, "bubbleChart", "bubble");
+            } catch (error) {
+                console.error("Error rendering bubble chart:", error);
+            }
         }
 
-        renderbubblechart()
+        async function populateDropDown() {
+            const repoNameData = await getRepoNames();
+            const select = document.getElementById("multioptions");
+
+            // Clear existing options
+            select.innerHTML = '';
+
+            // Populate dropdown
+            repoNameData.forEach(repo => {
+                const option = document.createElement("option");
+                option.textContent = repo.name;
+                option.value = repo.name;
+                select.appendChild(option);
+            });
+
+            // Render bubble chart for the first repository by default
+            if (repoNameData.length > 0) {
+                await renderBubbleChart();
+            }
+        }
+
+        // Initialize dropdown and bubble chart on page load
+        document.addEventListener("DOMContentLoaded", async () => {
+            await populateDropDown();
+            const repoOptions = document.getElementById("multioptions");
+            repoOptions.addEventListener("change", renderBubbleChart);
+        });
     </script>
 
-    <div id="pieChart"></div>
-
-
-
 </body>
+<footer>
+    <p>2024 Red Ocelot. All rights reserved.</p>
+</footer>
 
 </html>

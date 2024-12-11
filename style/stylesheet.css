@@ -64,53 +64,60 @@ body > * {
 #dropdown-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     margin-right: 20px; 
-    font-size: 1em; /* Ensure consistent text size */
-    gap: 10px; /* Add spacing between label and dropdown */
+    font-size: 1em; 
 }
 
 /* Dropdown Styling */
 #multioptions {
     padding: 10px;
     font-size: 1em;
-    border: 2px solid #E63946; /* Modern border with an accent color */
-    border-radius: 8px; /* Rounded corners for a modern look */
-    background-color: #222222; /* Slightly lighter than the navbar for contrast */
-    color: #e5e5e5; /* Ensure text is visible */
-    cursor: pointer; /* Change cursor to indicate interactivity */
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border: 2px solid #E63946; 
+    border-radius: 8px; 
+    background-color: #222222; 
+    color: #e5e5e5;
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
 /* Hover Effect */
 #multioptions:hover {
-    background-color: #333333; /* Slightly lighter for hover effect */
-    border-color: #5CDB95; /* Change border color on hover */
+    background-color: #333333; 
+    border-color: #5CDB95; 
 }
 
 /* Focused Dropdown */
 #multioptions:focus {
-    outline: none; /* Remove default browser outline */
-    border-color: #F5A623; /* Highlight border when focused */
-    box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.6); /* Add glow effect */
+    outline: none; 
+    border-color: #F5A623; 
+    box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.6); 
 }
 
 /* Label Styling */
 #dropdown-container label {
-    font-weight: bold; /* Emphasize label */
-    color: #e5e5e5; /* Match the overall theme */
+    font-weight: bold; 
+    color: #e5e5e5; 
 }
 
 /* Dropdown Arrow Customization */
 #multioptions {
-    appearance: none; /* Remove default browser arrow */
+    appearance: none; 
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23e5e5e5' d='M10 12l-6-6h12z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 1em;
-    padding-right: 30px; /* Add padding for custom arrow */
+    padding-right: 30px; 
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #5CDB95;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Main Content Styling */
@@ -173,15 +180,16 @@ body > * {
 }
 
 #pieChart {
-    background-color: #111111; /* Match the page background */
-    color: #e5e5e5; /* Set text color */
-    padding: 20px; /* Add some padding for better spacing */
-    border-radius: 10px; /* Optional for a rounded look */
-    display: block; /* Ensure it’s visible */
-    width: 100%; /* Ensure responsiveness */
-    max-width: 800px; /* Limit the width */
-    margin: 0 auto; /* Center the chart */
-    z-index: 10; /* Ensure it’s on top */
+    background-color: #111111; 
+    color: #e5e5e5; 
+    padding: 20px; 
+    border-radius: 10px; 
+    display: block; 
+    width: 90%; 
+    max-width: 1000px; 
+    height: 500px;
+    margin: auto; 
+    z-index: 10; 
 }
 
 /* New class to hide elements */
@@ -194,6 +202,147 @@ body > * {
     text-align: center;
     color: #F5A623;
     margin-bottom: 20px;
+}
+
+/* Back Button Styling */
+.back-button {
+    background-color: #E63946; 
+    color: #e5e5e5;
+    font-size: 1em;
+    padding: 10px 20px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #F5A623; 
+    transform: scale(1.05);
+}
+
+.back-button:focus {
+    outline: none; 
+    box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.6); 
+}
+
+/* Dropdown Styling */
+#multioptions {
+    padding: 10px;
+    font-size: 1em;
+    border: 2px solid #E63946;
+    border-radius: 8px;
+    background-color: #222222;
+    color: #e5e5e5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Date Picker Styling */
+input[type="date"] {
+    padding: 10px;
+    font-size: 1em;
+    border: 2px solid #E63946;
+    border-radius: 8px;
+    background-color: #222222;
+    color: #e5e5e5;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Histogram Chart Container */
+#histogramChart {
+    background-color: #111111;
+    color: #e5e5e5;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 800px;
+}
+
+/* Back Button Styling */
+.back-button {
+    background-color: #E63946;
+    color: #e5e5e5;
+    font-size: 1em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #F5A623;
+    transform: scale(1.05);
+}
+
+/* Pie Chart Styling */
+#pieChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    height: 500px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Chart Container Styling */
+#histogramChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    height: 500px; /* Fixed height for consistency */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#barChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto; /* Centers the chart horizontally */
+    width: 90%;
+    max-width: 800px; /* Limits the chart's width */
+    height: 500px; /* Sets the height of the chart */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bubbleChart {
+    background-color: #222222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin: 20px auto; /* Centers the chart horizontally */
+    width: 90%;
+    max-width: 800px; /* Restricts the chart's width */
+    height: 500px; /* Defines a consistent height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

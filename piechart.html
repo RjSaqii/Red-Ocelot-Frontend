@@ -28,6 +28,7 @@
         Pie Chart Visualization
     </h1>
 
+    
     <!-- Container for the pie chart -->
     <div id="pieChart"></div>
 
@@ -36,6 +37,7 @@
         // Render the pie chart
         async function renderPieChart() {
             const currentRepoName = document.getElementById("multioptions").value;
+            
 
             try {
                 const plotData = await getPlots(currentRepoName); // Fetch data for the pie chart

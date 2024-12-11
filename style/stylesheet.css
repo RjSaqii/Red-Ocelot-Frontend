@@ -345,6 +345,38 @@ input[type="date"] {
     align-items: center;
 }
 
+/* Back Button Container */
+.back-button-container {
+    display: inline-block;
+    position: absolute;
+    left: 20px; /* Align on the left */
+    top: 40%; /* Adjust the vertical position higher */
+    transform: translateY(-50%); /* Proper vertical centering */
+}
+
+/* Back Button Styling */
+.back-button {
+    text-decoration: none;
+    font-size: 0.9em; /* Smaller text size */
+    font-weight: bold;
+    padding: 8px 12px; /* Smaller padding for a compact look */
+    background-color: #E63946;
+    color: #ffffff;
+    border-radius: 4px; /* Slightly smaller border radius */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #F5A623;
+    transform: scale(1.05);
+}
+
+.back-button:focus {
+    outline: none;
+    box-shadow: 0px 0px 6px rgba(245, 166, 35, 0.6);
+}
+
+
 
 /* Footer Styling */
 footer {

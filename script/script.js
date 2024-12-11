@@ -53,13 +53,13 @@ async function getPlots(repoName) {
     }
 }
 // function to get plots from backend, plots will be used to generate pie chart using plotly
-async function getHistogram(repoName,start_date,end_date) {
-    const data = await sendPostRequest("histogram",{reponame:repoName,start_date, end_date});
+async function getHistogram(repoName,start_date,end_date,max_no_of_commits) {
+    const data = await sendPostRequest("histogram",{reponame:repoName,start_date, end_date, max_no_of_commits});
     return data
 }
 
-async function getBarPlots(repoName) {
-    const data = await sendPostRequest("barchart",{reponame:repoName});
+async function getBarPlots(repoName,no_of_lines) {
+    const data = await sendPostRequest("barchart",{reponame:repoName,no_of_lines});
     return data
 }
 async function getbubblechart() {
@@ -122,8 +122,9 @@ document.getElementById('pieChartBtn').addEventListener('click', showPieChartSec
 // Function to Render Pie Chart
 async function renderPieChart() {
     const currentRepoName = document.getElementById('multioptions').value;
+    const no_of_lines = document.getElementById('code-lines').value;
     try {
-        const plotData = await getPlots(currentRepoName);
+        const plotData = await getPlots(currentRepoName,no_of_lines);
         createChart(plotData, "pieChart", "pie");
     } catch (error) {
         console.error("Error rendering pie chart:", error);

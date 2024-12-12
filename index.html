@@ -4,8 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style/stylesheet.css">
-        <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <script defer src="./script/script.js"></script>
         <title>Red Ocelot</title>
     </head>
 
@@ -13,12 +11,6 @@
     <!-- Navbar -->
     <nav class="navbar">
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
-        <div class="navbar-brand">
-            <div id="dropdown-container">
-                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
-                <select id="multioptions" name="multioptions"></select>
-            </div>
-        </div>
     </nav>
     
     <!-- Main Content -->
@@ -34,185 +26,12 @@
 
     <!-- Buttons -->
     <div id="button-container">
-        <button id="pieChartBtn">Pie Chart</button>
-        <button onclick="showChart('Histogram')">Histogram</button>
-        <button id="barChartBtn">Bar Chart</button>
-        <button onclick="showChart('Heatmap')">Heat Map</button>
-    </div>
-    <!-- Bar Chart -->
-    <div id="barChartSection" class="hidden">
-        <h1>Bar Chart Visualization</h1>
-        <div id="barChart" style="width: 600px; height: 400px; margin: auto;"></div>
+        <a href="piechart.html"><button>Pie Chart</button></a>
+        <a href="histogram.html"><button>Histogram</button></a>
+        <a href="barchart.html"><button>Bar Chart</button></a>
+        <a href="bubblechart.html"><button>Bubble Chart</button></a>
     </div>
 
-     <!-- JavaScript -->
-     <script>
-        // Show Pie Chart Section and Hide Others
-        function showBarChartSection() {
-            document.querySelector('.main-content').classList.add('hidden');
-            document.getElementById('button-container').classList.add('hidden');
-            document.getElementById('barChartSection').classList.remove('hidden');
-            renderBarChart();
-        }   
-
-            document.getElementById('barChartBtn').addEventListener('click', showBarChartSection);
-
-             async function renderBarChart(repoName) {
-    
-            // Get the currently selected repository name
-            const currentRepoName = document.getElementById("multioptions").value;
-
-        try {
-            // Fetch plot data from the API
-            const plotData = await getBarPlots(currentRepoName); // Uses the getPlots function
-
-            // Create the bar chart
-            createChart(plotData, "barChart", "bar"); // Render the chart in the #barChart element
-        } catch (error) {
-            console.error("Error rendering bar chart:", error);
-     }
-    }
-
-        // Fetch repository names
-        async function getRepoNames() {
-            return await sendGetRequest('getreponames'); // Replace with your actual API call
-        }
-
-        // Fetch authors by repository
-        async function getAuthors(repoName) {
-            return await sendPostRequest('authorsbyreponame', { reponame: repoName }); // Replace with your API call
-        }
-
-        async function getBarPlots(repoName) {
-        const data = await sendPostRequest("barchart",{reponame:repoName});
-        return data
-        }
-        function createBarChart(plotData, targetElementId) {
-                    const parsedData = JSON.parse(plotData);
-                    const data = parsedData.data;
-                    const layout = parsedData.layout;
-    
-                    // Ensure 'type' is set to 'bar'
-                    data.forEach(trace => trace.type = 'bar');
-    
-                    // Render chart with Plotly
-                    Plotly.newPlot(targetElementId, data, layout);
-                }   
-
-                async function renderBarChart(repoName) {
-    
-                // Get the currently selected repository name
-                const currentRepoName = document.getElementById("multioptions").value;
-
-                try {
-                // Fetch plot data from the API
-                const plotData = await getBarPlots(currentRepoName); // Uses the getPlots function
-
-                // Create the bar chart
-                 createChart(plotData, "barChart", "bar"); // Render the chart in the #barChart element
-                } catch (error) {
-                  console.error("Error rendering bar chart:", error);
-                }
-            }
-        </script>
-
-
-
-    <!-- Pie Chart Container -->
-    <div id="pieChartSection" class="hidden">
-        <h1>Pie Chart Visualization</h1>
-        <div id="pieChart"></div>
-        <button id="backButton" class="back-button">Back to Main Page</button>
-    </div>
-
-            <!-- JavaScript -->
-            <script>
-                // Show Pie Chart Section and Hide Others
-                function showPieChartSection() {
-                    document.querySelector('.main-content').classList.add('hidden');
-                    document.getElementById('button-container').classList.add('hidden');
-                    document.getElementById('pieChartSection').classList.remove('hidden');
-                    renderPieChart();
-                }   
-
-                document.getElementById('pieChartBtn').addEventListener('click', showPieChartSection);
-
-                // Fetch repository names
-                async function getRepoNames() {
-                    return await sendGetRequest('getreponames'); // Replace with your actual API call
-                }
-    
-                // Fetch authors by repository
-                async function getAuthors(repoName) {
-                    return await sendPostRequest('authorsbyreponame', { reponame: repoName }); // Replace with your API call
-                }
-    
-                // Fetch pie chart data
-                async function getPlots(repoName) {
-                    return await sendPostRequest('piechart', { reponame: repoName }); // Replace with your API call
-                }
-    
-                // Create pie chart
-                function createPieChart(plotData, targetElementId) {
-                    const parsedData = JSON.parse(plotData);
-                    const data = parsedData.data;
-                    const layout = parsedData.layout;
-    
-                    // Ensure 'type' is set to 'pie'
-                    data.forEach(trace => trace.type = 'pie');
-    
-                    // Render chart with Plotly
-                    Plotly.newPlot(targetElementId, data, layout);
-                }
-    
-                // Render the pie chart
-                async function renderPieChart() {
-                    const currentRepoName = document.getElementById('multioptions').value;
-    
-                    try {
-                        const plotData = await getPlots(currentRepoName);
-                        createPieChart(plotData, 'pieChart');
-                    } catch (error) {
-                        console.error('Error rendering pie chart:', error);
-                    }
-                }
-    
-                // Populate dropdown with repositories
-                async function populateDropDown() {
-                    const repoNameData = await getRepoNames();
-                    const select = document.getElementById('multioptions');
-    
-                    // Clear existing options
-                    select.innerHTML = '';
-    
-                    // Populate with new options
-                    repoNameData.forEach(repo => {
-                        const option = document.createElement('option');
-                        option.text = repo.name;
-                        option.value = repo.name;
-                        select.appendChild(option);
-                    });
-    
-                    // Render the pie chart for the first repository by default
-                    if (repoNameData.length > 0) {
-                        await renderPieChart();
-                        await renderBarChart();
-                    }
-                }
-    
-                // Initialize dropdowns and event listeners
-                document.addEventListener('DOMContentLoaded', async () => {
-                    await populateDropDown();
-    
-                    const repoOptions = document.getElementById('multioptions');
-                    repoOptions.addEventListener('change', async () => {
-                        await renderPieChart();
-                        await renderBarChart();
-                    });
-                });
-
-                
-            </script>
 
 </body>
     <footer>

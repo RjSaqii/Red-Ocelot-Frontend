@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style/stylesheet.css">
     <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script defer src="./script/script.js"></script>
-    <title>Bar Chart Visualization</title>
+    <title>Red Ocelot - Bar Chart</title>
 </head>
 
 <body>
@@ -23,61 +23,150 @@
     </nav>
 
     <!-- Main Heading -->
-    <h1>Bar Chart Visualization</h1>
+    <h1>Bar Chart Visualisation</h1>
+    <h3>Displays the distribution of lines of code across files in the repository.</h3>
+
+    <!-- Filters Section -->
+    <div id="filters">
+        <div id="slider-container">
+            <label for="code-lines"><span class="white-text">Number of Lines of Code:</span></label>
+            <input type="range" id="code-lines" name="code-lines" min="1" max="5000" value="100" step="1">
+            <span id="code-slider-value">100</span>
+        </div>
+    </div>
 
     <!-- Chart Container -->
     <div id="barChart"></div>
 
+    <!-- Additional Information -->
+    <p>
+        This bar chart visualises the distribution of lines of code (LOC) across files in a repository. 
+        It helps identify files with significantly higher LOC, which might indicate potential monolithic designs or areas for refactoring.
+    </p>
+
+    <h1 id="toggleCompare">Compare Repositories</h1>
+
+    <!-- Comparison Div -->
+    <div id="comparisonDiv">
+        <input type="text" id="compareRepoInput" placeholder="Enter Username Name" />
+        <button id="loadChartButton">Load Chart</button>
+    
+        <!-- Dropdown for selecting repositories -->
+        <div id="dropdown-container">
+            <label for="repoDropdown">Select Repository:</label>
+            <select id="repoDropdown"></select>
+        </div>
+    
+        <!-- Current Repository Chart in Compare Section -->
+        <div id="currentRepoChart" style="width: 600px; height: 400px; margin: auto;" class="comparison-chart"></div>
+    </div>
+    <!-- Back Button to go Back to the Index Page -->
+    <a href="index.html"><button class="back-button">Back to Main Page</button></a>
+
     <!-- JavaScript -->
     <script>
-        // Populate Dropdown and Initialize Bar Chart
         document.addEventListener("DOMContentLoaded", async () => {
-            await populateDropDown();
-
-            const repoOptions = document.getElementById("multioptions");
-
-            // Add event listener for repository changes
-            repoOptions.addEventListener("change", renderBarChart);
-        });
-
-        async function renderBarChart() {
-            const currentRepoName = document.getElementById("multioptions").value;
-
-            try {
-                const plotData = await getBarPlots(currentRepoName);
-                createChart(plotData, "barChart", "bar");
-            } catch (error) {
-                console.error("Error rendering bar chart:", error);
-            }
-        }
-
-        async function populateDropDown() {
-            try {
-                const repoNameData = await getRepoNames();
-                const select = document.getElementById("multioptions");
-
-                // Clear existing options
-                select.innerHTML = '';
-
-                // Populate dropdown
-                repoNameData.forEach((repo) => {
-                    const option = document.createElement("option");
-                    option.textContent = repo.name;
-                    option.value = repo.name;
-                    select.appendChild(option);
-                });
-
-                // Render bar chart for the first repository by default
-                if (repoNameData.length > 0) {
-                    await renderBarChart();
+            const dropdown = document.getElementById("multioptions");
+            const repoDropdown = document.getElementById("repoDropdown");
+            const slider = document.getElementById("code-lines");
+            const sliderValue = document.getElementById("code-slider-value");
+            const loadChartButton = document.getElementById("loadChartButton");
+    
+            // Populate dropdown with repository names
+            async function populateDropdown() {
+                try {
+                    const repoNames = await getRepoNames();
+                    dropdown.innerHTML = ''; // Clear existing options
+    
+                    repoNames.forEach((repo) => {
+                        const option = document.createElement("option");
+                        option.textContent = repo.name;
+                        option.value = repo.name;
+                        dropdown.appendChild(option);
+                    });
+    
+                    // Render bar chart for the first repository by default
+                    if (repoNames.length > 0) {
+                        await renderBarChart(repoNames[0].name);
+                    }
+                } catch (error) {
+                    console.error("Error populating dropdown:", error);
                 }
+            }
+    
+            // Render bar chart based on selected repository and slider value
+            async function renderBarChart(repoName = dropdown.value, targetElementId = "barChart") {
+                const codeLines = slider.value;
+    
+                try {
+                    const plotData = await getBarPlots(repoName, codeLines);
+                    createChart(plotData, targetElementId, "bar");
+                } catch (error) {
+                    console.error(`Error rendering bar chart for repository ${repoName}:`, error);
+                }
+            }
+    
+            // Load repositories for comparison
+            async function loadRepositoriesForAuthor() {
+                const author = document.getElementById("compareRepoInput").value;
+                if (!author) {
+                    alert("Please enter an author name.");
+                    return;
+                }
+                const repos = await getAuthorRepositories(author);
+                try {
+                    
+                    repoDropdown.innerHTML = ''; // Clear dropdown options
+    
+                    repos.forEach((repo) => {
+                        const option = document.createElement("option");
+                        option.textContent = repo;
+                        option.value = repo;
+                        repoDropdown.appendChild(option);
+                    });
+    
+                    // Render bar chart for the first repository by default
+                    if (repos.length > 0) {
+                        await renderAuthorBarChart(repos[0], "currentRepoChart");
+                    }
+    
+                    // Event listener for dropdown changes
+                    repoDropdown.addEventListener("change", async () => {
+                        const selectedRepo = repoDropdown.value;
+                        if (selectedRepo) {
+                            await renderAuthorBarChart(selectedRepo, "currentRepoChart");
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error loading repositories for author:", error);
+                }
+            }
+    
+            // Event listeners
+            dropdown.addEventListener("change", () => renderBarChart());
+            slider.addEventListener("input", () => {
+                sliderValue.textContent = slider.value;
+                renderAuthorBarChart();
+            });
+            loadChartButton.addEventListener("click", loadRepositoriesForAuthor);
+    
+            // Initialize
+            await populateDropdown();
+        });
+    
+        // Function to render the bar chart
+        async function renderAuthorBarChart(repoName, targetElementId = "comparisonDiv") {
+            try {
+                const userName = document.getElementById("compareRepoInput").value;
+                const plotData = await getauthorbarchart(repoName,userName); // Default slider value
+                createChart(plotData, targetElementId, "bar");
             } catch (error) {
-                console.error("Error populating dropdown:", error);
+                console.error(`Error rendering bar chart for repository ${repoName}:`, error);
             }
         }
     </script>
-   
     
+
 </body>
 
 </html>

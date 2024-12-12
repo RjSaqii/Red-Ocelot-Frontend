@@ -7,184 +7,267 @@
     <link rel="stylesheet" href="style/stylesheet.css">
     <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script defer src="./script/script.js"></script>
-    <title>Histogram</title>
+    <title>Red Ocelot - Histogram</title>
 </head>
 
 <body>
-    <h1>test</h1>
-    <script src="./script/script.js"></script>
-    <select name="multioptions" id="multioptions"></select>
-    <select name="authors" id="authors"></select>
-
+    <!-- Navbar -->
     <nav class="navbar">
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
         <div class="navbar-brand">
             <div id="dropdown-container">
-                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
+                <label for="multioptions"><span class="white-text">Select Repository:</span></label>
                 <select id="multioptions" name="multioptions"></select>
             </div>
         </div>
+    </nav>
+
+    <!-- Title -->
+    <h1>Histogram Visualisation</h1>
+    <h3>Histograms of commits showing how many commits took place in a given day, week, month, or year.</h3>
+
+    <!-- Filters and Slider Section -->
+    <div id="filters">
+        <div id="date-container">
+            <div>
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate" name="startDate">
+            </div>
+            <div>
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate" name="endDate">
+            </div>
+        </div>
+        <div id="slider-container">
+            <label for="max-commits">Maximum Number of Commits:</label>
+            <input 
+                type="range" 
+                id="max-commits" 
+                name="max-commits" 
+                min="1"  
+                max="5000" 
+                value="100" 
+                step="1">
+            <span id="slider-value">100</span>
+        </div>
     </div>
-</nav>
 
-<h1>Histogram Visualisation</h1>
+    <!-- Chart Container -->
+    <div id="mainHistogram"></div>
 
-<div id="date-container">
-    <label for="startDate"><span class="white-text">Start Date:</span></label>
-    <input type="date" id="startDate" name="startDate">
-    <label for="endDate"><span class="white-text">End Date:</span></label>
-    <input type="date" id="endDate" name="endDate">
-</div>
+    <!-- Additional Information -->
+    <p>
+        The histogram captures the frequency of commits over specific periods (daily, weekly, monthly, or yearly).
+        It provides insights into project activity trends, highlighting busy phases such as initial development, deployment, or maintenance stages.
+    </p>
+
+    <!-- Input and button moved outside -->
+    <h1 id="toggleCompare">Compare Repositories</h1>
+
+    <!-- Comparison Div -->
+    <div id="comparisonDiv">
+        <div id="input-container">
+            <input type="text" id="compareRepoInput" placeholder="Enter Username Name" />
+            <button id="loadChartButton">Load Chart</button>
+        </div>
+
+        <div id="filters">
+            <div id="date-container">
+                <div class="date-field">
+                    <label for="compstartDate">Start Date:</label>
+                    <input type="date" id="compStartDate" name="startDate" />
+                </div>
+                <div class="date-field">
+                    <label for="compendDate">End Date:</label>
+                    <input type="date" id="compEndDate" name="endDate" />
+                </div>
+            </div>
+            <!-- Dropdown for selecting repositories -->
+            <div id="dropdown-container">
+                <label for="repoDropdown">Select Repository:</label>
+                <select id="repoDropdown"></select>
+            </div>
+        </div>
+    
+        <!-- Current Repository Chart in Compare Section -->
+        <div id="currentRepoChart" style="width: 600px; height: 400px; margin: auto;" class="comparison-chart"></div>
+    </div>
 
 
-    <!-- Slider Input -->
-    <label for="max-commits">Maximum Number of Commits:</label>
-    <input 
-        type="range" 
-        id="max-commits" 
-        name="max-commits" 
-        min="1" 
-        max="5000" 
-        value="100" 
-        step="1">
-    <span id="slider-value">100</span>
-
-   <!-- The page will render the pie chart later, the function just needs to be here to exist -->
-    <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Back Button to go Back to the Index Page -->
+    <a href="index.html"><button class="back-button">Back to Main Page</button></a>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", async () => {
+            const dropdown = document.getElementById("multioptions");
+            const startDateInput = document.getElementById("startDate");
+            const compStartDateInput = document.getElementById("compStartDate");
+            const endDateInput = document.getElementById("endDate");
+            const compEndDateInput = document.getElementById("compEndDate");
+            const slider = document.getElementById("max-commits");
+            const sliderValue = document.getElementById("slider-value");
+            const compareInput = document.getElementById("compareRepoInput");
+            const loadButton = document.getElementById("loadChartButton");
+            const repoDropdown = document.getElementById("repoDropdown");
+    
+            // Set default dates
+            function setDefaultDates() {
+                const startDate = new Date(2019, 0, 1).toISOString().split("T")[0]; // January 1, 2019
+                const endDate = new Date(2025, 0, 1).toISOString().split("T")[0]; // January 1, 2025
+                startDateInput.value = startDate;
+                endDateInput.value = endDate;
 
-            async function renderHistogram() {
-                // Ensure the elements are available
-                const currentRepoName = document.getElementById("multioptions").value;
-                const startDate = document.getElementById("startDate").value;
-                const endDate = document.getElementById("endDate").value;
-                const max_no_of_commits = Number(document.getElementById("max-commits").value);
+                compStartDateInput.value = startDate;
+                compEndDateInput.value = endDate;
 
-                console.log("Repository:", currentRepoName);
-                console.log("Start Date:", startDate);
-                console.log("End Date:", endDate);
-                console.log("Max Commits:", max_no_of_commits);
-
+            }
+    
+            // Populate dropdown with repository names
+            async function populateDropdown() {
                 try {
-                    // Fetch plot data from the API
-                    const plotData = await getHistogram(currentRepoName, startDate, endDate, max_no_of_commits); // Uses the getPlots function
-
-                    // Create the pie chart
-                    createChart(plotData, "pieChart", "histogram"); // Render the chart in the #pieChart element
+                    const repoNames = await getRepoNames();
+                    dropdown.innerHTML = ''; // Clear options
+                    repoNames.forEach(repo => {
+                        const option = document.createElement("option");
+                        option.textContent = repo.name;
+                        option.value = repo.name;
+                        dropdown.appendChild(option);
+                    });
+    
+                    // Render histogram for the first repository by default
+                    if (repoNames.length > 0) {
+                        await renderHistogram(repoNames[0].name, "mainHistogram");
+                    }
                 } catch (error) {
-                    console.error("Error rendering pie chart:", error);
+                    console.error("Error populating dropdown:", error);
+                }
+            }
+    
+            // Render histogram based on filters
+            async function renderHistogram(repoName, targetElementId = "mainHistogram") {
+                const startDate = startDateInput.value;
+                const endDate = endDateInput.value;
+                const maxCommits = slider.value;
+    
+                try {
+                    const plotData = await getHistogram(repoName, startDate, endDate, maxCommits);
+                    createChart(plotData, targetElementId, "histogram");
+                } catch (error) {
+                    console.error(`Error rendering histogram for ${repoName}:`, error);
+                }
+            }
+    
+            // Event listeners
+            dropdown.addEventListener("change", () => renderHistogram(dropdown.value, "mainHistogram"));
+            startDateInput.addEventListener("change", () => renderHistogram(dropdown.value, "mainHistogram"));
+            endDateInput.addEventListener("change", () => renderHistogram(dropdown.value, "mainHistogram"));
+            slider.addEventListener("input", () => {
+                sliderValue.textContent = slider.value;
+                renderHistogram(dropdown.value, "mainHistogram");
+            });
+    
+            // Event listener for comparison section
+            loadButton.addEventListener("click", async () => {
+                const userName = document.getElementById("compareRepoInput").value;
+                if (!userName) {
+                    alert("Please enter an author name.");
+                    return;
+                }
+                const compstartDate = compStartDateInput.value;
+                const compendDate = compEndDateInput.value;
+
+                const repos = await getAuthorRepositories(userName);
+                console.log(repos);
+                // try {
+                    
+                    console.log("Repositories for author:", repos);
+
+                    repoDropdown.innerHTML = ""; // Clear dropdown options
+                    repos.forEach(repo => {
+                        const option = document.createElement("option");
+                        option.textContent = repo;
+                        option.value = repo;
+                        repoDropdown.appendChild(option);
+                    });
+    
+                    // Render the first repo's pie chart by default
+                    if (repos.length > 0) {
+                        let comparedRepoName = document.getElementById("repoDropdown").value;;
+                        await fetchAuthorHistogramData(userName,comparedRepoName, compstartDate, compendDate);
+                    } else {
+                        alert("No repositories found for this author.");
+                    }
+                    repoDropdown.addEventListener("change", async () => {
+                        const repoUserName = document.getElementById("compareRepoInput").value;
+                        const secondaryRepo = document.getElementById("repoDropdown").value;;
+                        const repoCompstartDate = compStartDateInput.value;
+                        const repoCompendDate = compEndDateInput.value;
+
+                        await fetchAuthorHistogramData(repoUserName, secondaryRepo,repoCompstartDate, repoCompendDate);
+                    });
+                // } catch (error) {
+                //     console.error("Error loading repositories for author:", error);
+                // }
+             await fetchAuthorHistogramData(userName, secondaryRepo,repoCompstartDate, repoCompendDate);
+
+            });
+    
+            // Initialize
+            setDefaultDates();
+            await populateDropdown();
+        });
+
+        // Load repositories for comparison
+        // Load repositories for comparison
+        async function loadRepositoriesForAuthor() {
+                const author = document.getElementById("compareRepoInput").value;
+                if (!author) {
+                    alert("Please enter an author name.");
+                    return;
+                }
+                const repos = await getAuthorRepositories(author);
+                try {
+                    
+                    repoDropdown.innerHTML = ''; // Clear dropdown options
+    
+                    repos.forEach((repo) => {
+                        const option = document.createElement("option");
+                        option.textContent = repo;
+                        option.value = repo;
+                        repoDropdown.appendChild(option);
+                    });
+    
+                    // Render Histogram for the first repository by default
+                    if (repos.length > 0) {
+                        await renderAuthorHistogram(repos[0], "currentRepoChart");
+                    }
+    
+                    // Event listener for dropdown changes
+                    repoDropdown.addEventListener("change", async () => {
+                        const selectedRepo = repoDropdown.value;
+                        if (selectedRepo) {
+                            await renderAuthorHistogram(selectedRepo, "currentRepoChart");
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error loading repositories for author:", error);
                 }
             }
 
-            async function populateDropDown() {
-                const repoNameData = await getRepoNames();
-
-                let select = document.getElementById("multioptions");
-                for (let i = 0; i < repoNameData.length; i++) {
-                    const repoName = repoNameData[i].name;
-
-                    let option = document.createElement('option');
-                    option.text = repoName;
-                    option.value = repoName;
-                    select.appendChild(option);
-                }
-
-                // Render pie chart for the first repository by default
-                if (repoNameData.length > 0) {
-                    await renderHistogram();
-                }
-            }
-                let option = document.createElement('option')
-                option.text = repoName
-                option.value = repoName
-                option.setAttribute("id", "multioptions")
-
-                select.appendChild(option)
-            }
-            // Render pie chart for the first repository by default
-            if (repoNameData.length > 0) {
-                await renderHistogram();
+                    // Function to render the bar chart
+        async function renderAuthorHistogram(repoName, targetElementId = "comparisonDiv") {
+            try {
+                const userName = document.getElementById("compareRepoInput").value;
+                const plotData = await getauthorhistogram(start_date,end_date,username, reponame); // Default slider value
+                createChart(plotData, targetElementId, "histogram");
+            } catch (error) {
+                console.error(`Error rendering bar chart for repository ${repoName}:`, error);
             }
         }
 
-            async function populateAuthorsDropDown() {
-                const currentRepoName = document.getElementById("multioptions").value;
-                const authorData = await getAuthors(currentRepoName);
-                console.log(authorData);
-
-                let select = document.getElementById("authors");
-                for (let i = 0; i < authorData.length; i++) {
-                    const author = authorData[i].author;
-
-                    let option = document.createElement('option');
-                    option.text = author;
-                    option.value = author;
-                    select.appendChild(option);
-                }
-            }
-
-            // Populate repository and authors drop-downs
-            populateDropDown().then(() => {
-                populateAuthorsDropDown();
-            });
-
-            // Event listeners for repository change, and re-render histogram
-            let repoOptions = document.getElementById("multioptions");
-            let authorOptions = document.getElementById("authors");
-
-            repoOptions.addEventListener('change', function () {
-                authorOptions.options.length = 0; // Clear previous authors
-                populateAuthorsDropDown();
-                renderHistogram();  // Re-render histogram when repository changes
-            });
-
-            // Listen for changes on the slider
-            document.getElementById("max-commits").addEventListener("input", function () {
-                document.getElementById("slider-value").innerText = this.value;
-                renderHistogram(); // Re-render histogram when slider value changes
-            });
-
-            // Listen for changes on the date inputs
-            document.getElementById("startDate").addEventListener("change", renderHistogram);
-            document.getElementById("endDate").addEventListener("change", renderHistogram);
-        });
-        let repoOptions = document.getElementById("multioptions")
-        let authorOptions = document.getElementById("authors")
-        repoOptions.addEventListener('change', function (event) {
-            authorOptions.options.length = 0
-            populateAuthorsDropDown()
-            renderHistogram()
-        })
-
-            // Initialize dropdown and render histogram on page load
-            document.addEventListener("DOMContentLoaded", async () => {
-            await populateDropDown();
-
-            const repoOptions = document.getElementById("multioptions");
-            const startDateInput = document.getElementById("startDate");
-            const endDateInput = document.getElementById("endDate");
-
-            // Add event listeners for repository and date changes
-            repoOptions.addEventListener("change", renderHistogram);
-            startDateInput.addEventListener("change", renderHistogram);
-            endDateInput.addEventListener("change", renderHistogram);
-
-            // Set default dates
-            const firstDate = new Date();
-            firstDate.setFullYear(2018, 11, 11); // Default start date
-            const today = new Date(); // Default end date
-
-            startDateInput.value = firstDate.toISOString().split("T")[0];
-            endDateInput.value = today.toISOString().split("T")[0];
-        });
-
+        
     </script>
-
-    <div id="pieChart"></div>
-
+    
 </body>
 
 </html>

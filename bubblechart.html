@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style/stylesheet.css">
     <script defer src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script defer src="./script/script.js"></script>
-    <title>Red Ocelot</title>
+    <title>Red Ocelot - Bubble Chart</title>
 </head>
 
 <body>
@@ -22,51 +22,112 @@
         </div>
     </nav>
 
-    <h1>Bubble Chart Visualization</h1>
+    <!-- Main Heading -->
+    <h1>Bubble Chart Visualisation</h1>
 
-    <!-- Container for the bubble chart -->
+    <h3>Depicts various project metrics using bubble size and position for comparison.</h3>
+
+    <!-- Chart Container -->
     <div id="bubbleChart"></div>
+
+    <!-- Additional Information -->
+    <p>
+        The bubble chart provides a multidimensional perspective, where bubble size and position highlight commit authorship, frequency, and associated watchers. 
+        It facilitates the identification of trends, anomalies, and potential outliers in repository activity.
+    </p>
+
+    <!-- Comparison Div -->
+    <div id="comparisonDiv">
+        <input type="text" id="compareRepoInput" placeholder="Enter Username Name" />
+        <button id="loadChartButton">Load Chart</button>
+
+        <!-- Current Repository Chart in Compare Section -->
+        <div id="currentRepoChart" style="width: 600px; height: 400px; margin: auto;" class="comparison-chart"></div>
+    </div>
+
+    <!-- Back Button to go Back to the Index Page -->
+    <a href="index.html"><button class="back-button">Back to Main Page</button></a>
 
     <!-- JavaScript -->
     <script>
-        async function renderBubbleChart() {
-            const currentRepoName = document.getElementById("multioptions").value;
-
-            try {
-                const plotData = await getbubblechart(currentRepoName);
-                createChart(plotData, "bubbleChart", "bubble");
-            } catch (error) {
-                console.error("Error rendering bubble chart:", error);
-            }
-        }
-
-        async function populateDropDown() {
-            const repoNameData = await getRepoNames();
-            const select = document.getElementById("multioptions");
-
-            // Clear existing options
-            select.innerHTML = '';
-
-            // Populate dropdown
-            repoNameData.forEach(repo => {
-                const option = document.createElement("option");
-                option.textContent = repo.name;
-                option.value = repo.name;
-                select.appendChild(option);
-            });
-
-            // Render bubble chart for the first repository by default
-            if (repoNameData.length > 0) {
-                await renderBubbleChart();
-            }
-        }
-
-        // Initialize dropdown and bubble chart on page load
         document.addEventListener("DOMContentLoaded", async () => {
-            await populateDropDown();
-            const repoOptions = document.getElementById("multioptions");
-            repoOptions.addEventListener("change", renderBubbleChart);
+            const dropdown = document.getElementById("multioptions");
+            const loadChartButton = document.getElementById("loadChartButton");
+
+            // Populate dropdown with repository names
+            async function populateDropdown() {
+                try {
+                    const repoNames = await getRepoNames();
+                    dropdown.innerHTML = ''; // Clear existing options
+
+                    repoNames.forEach((repo) => {
+                        const option = document.createElement("option");
+                        option.textContent = repo.name;
+                        option.value = repo.name;
+                        dropdown.appendChild(option);
+                    });
+
+                    // Render bubble chart for the first repository by default
+                    if (repoNames.length > 0) {
+                        await renderBubbleChart(repoNames[0].name);
+                    }
+                } catch (error) {
+                    console.error("Error populating dropdown:", error);
+                }
+            }
+
+            // Render bubble chart based on selected repository
+            async function renderBubbleChart(repoName = dropdown.value) {
+                try {
+                    const plotData = await getbubblechart(repoName);
+                    createChart(plotData, "bubbleChart", "bubble");
+                } catch (error) {
+                    console.error("Error rendering bubble chart:", error);
+                }
+            }
+
+            // Event listener for dropdown changes
+            dropdown.addEventListener("change", () => renderBubbleChart());
+
+            loadChartButton.addEventListener("click", loadRepositoriesForAuthor);
+
+            // Initialize
+            await populateDropdown();
         });
+
+        // Load chart for the selected repository
+        async function loadRepositoriesForAuthor() {
+            const author = document.getElementById("compareRepoInput").value;
+            if (!author) {
+                alert("Please enter an author name.");
+                return;
+            }
+            const repos = await getAuthorRepositories(author);
+            try {
+                repos.forEach((repo) => {
+                    const option = document.createElement("option");
+                    option.textContent = repo;
+                    option.value = repo;
+                });
+
+                // Render bubble chart for the first repository by default
+                if (repos.length > 0) {
+                    await renderAuthorBubbleChart(repos[0], "currentRepoChart");
+                }
+            } catch (error) {
+                console.error("Error loading repositories for author:", error);
+            }
+                    // Function to render the bar chart
+        async function renderAuthorBubbleChart(repoName, targetElementId = "comparisonDiv") {
+            try {
+                const userName = document.getElementById("compareRepoInput").value;
+                const plotData = await getauthorbubblechart(userName); // Default slider value
+                createChart(plotData, targetElementId, "bubble");
+            } catch (error) {
+                console.error(`Error rendering bar chart for repository ${repoName}:`, error);
+            }
+        }
+        }
     </script>
 
 </body>

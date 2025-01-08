@@ -15,10 +15,7 @@
     <nav class="navbar">
         <h1><span class="red-text">Red</span><span class="white-text">Ocelot</span></h1>
         <div class="navbar-brand">
-            <div id="dropdown-container">
-                <label for="multioptions"><span class="white-text">Select the Repository:</span></label>
-                <select id="multioptions" name="multioptions"></select>
-            </div>
+        <select id="multioptions"></select>
         </div>
     </nav>
 
@@ -58,7 +55,7 @@
             async function populateDropdown() {
                 try {
                     const repoNames = await getRepoNames();
-                    dropdown.innerHTML = ''; // Clear existing options
+                    dropdown.innerHTML = ''; 
 
                     repoNames.forEach((repo) => {
                         const option = document.createElement("option");
@@ -121,7 +118,7 @@
         async function renderAuthorBubbleChart(repoName, targetElementId = "comparisonDiv") {
             try {
                 const userName = document.getElementById("compareRepoInput").value;
-                const plotData = await getauthorbubblechart(userName); // Default slider value
+                const plotData = await getauthorbubblechart(userName); 
                 createChart(plotData, targetElementId, "bubble");
             } catch (error) {
                 console.error(`Error rendering bar chart for repository ${repoName}:`, error);

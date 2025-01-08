@@ -116,7 +116,7 @@
                 const repos = await getAuthorRepositories(author);
                 try {
                     
-                    repoDropdown.innerHTML = ''; // Clear dropdown options
+                    repoDropdown.innerHTML = ''; 
     
                     repos.forEach((repo) => {
                         const option = document.createElement("option");
@@ -158,15 +158,13 @@
         async function renderAuthorBarChart(repoName, targetElementId = "comparisonDiv") {
             try {
                 const userName = document.getElementById("compareRepoInput").value;
-                const plotData = await getauthorbarchart(repoName,userName); // Default slider value
+                const plotData = await getauthorbarchart(repoName,userName); 
                 createChart(plotData, targetElementId, "bar");
             } catch (error) {
                 console.error(`Error rendering bar chart for repository ${repoName}:`, error);
             }
         }
     </script>
-    
-
 </body>
 
 </html>

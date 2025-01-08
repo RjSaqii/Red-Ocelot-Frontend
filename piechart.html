@@ -66,7 +66,7 @@
             async function populateMultiDropdown() {
                 try {
                     const repoNames = await getRepoNames();
-                    multiDropdown.innerHTML = ''; // Clear existing options
+                    multiDropdown.innerHTML = ''; 
                     repoNames.forEach(repo => {
                         const option = document.createElement("option");
                         option.textContent = repo.name;
@@ -105,7 +105,7 @@
                     
                     console.log("Repositories for author:", repos);
 
-                    repoDropdown.innerHTML = ""; // Clear dropdown options
+                    repoDropdown.innerHTML = ""; 
                     repos.forEach(repo => {
                         const option = document.createElement("option");
                         option.textContent = repo;

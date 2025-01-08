@@ -126,7 +126,7 @@
             async function populateDropdown() {
                 try {
                     const repoNames = await getRepoNames();
-                    dropdown.innerHTML = ''; // Clear options
+                    dropdown.innerHTML = ''; 
                     repoNames.forEach(repo => {
                         const option = document.createElement("option");
                         option.textContent = repo.name;
@@ -178,11 +178,10 @@
 
                 const repos = await getAuthorRepositories(userName);
                 console.log(repos);
-                // try {
                     
                     console.log("Repositories for author:", repos);
 
-                    repoDropdown.innerHTML = ""; // Clear dropdown options
+                    repoDropdown.innerHTML = ""; 
                     repos.forEach(repo => {
                         const option = document.createElement("option");
                         option.textContent = repo;
@@ -205,9 +204,6 @@
 
                         await fetchAuthorHistogramData(repoUserName, secondaryRepo,repoCompstartDate, repoCompendDate);
                     });
-                // } catch (error) {
-                //     console.error("Error loading repositories for author:", error);
-                // }
              await fetchAuthorHistogramData(userName, secondaryRepo,repoCompstartDate, repoCompendDate);
 
             });
@@ -218,7 +214,6 @@
         });
 
         // Load repositories for comparison
-        // Load repositories for comparison
         async function loadRepositoriesForAuthor() {
                 const author = document.getElementById("compareRepoInput").value;
                 if (!author) {
@@ -228,7 +223,7 @@
                 const repos = await getAuthorRepositories(author);
                 try {
                     
-                    repoDropdown.innerHTML = ''; // Clear dropdown options
+                    repoDropdown.innerHTML = ''; 
     
                     repos.forEach((repo) => {
                         const option = document.createElement("option");
@@ -258,16 +253,13 @@
         async function renderAuthorHistogram(repoName, targetElementId = "comparisonDiv") {
             try {
                 const userName = document.getElementById("compareRepoInput").value;
-                const plotData = await getauthorhistogram(start_date,end_date,username, reponame); // Default slider value
+                const plotData = await getauthorhistogram(start_date,end_date,username, reponame); 
                 createChart(plotData, targetElementId, "histogram");
             } catch (error) {
                 console.error(`Error rendering bar chart for repository ${repoName}:`, error);
             }
         }
 
-        
-    </script>
-    
+    </script>    
 </body>
-
 </html>

@@ -66,7 +66,7 @@ async function getbubblechart() {
 async function getBarPlots(repoName, no_of_lines) {
     try {
         const data = await sendPostRequest("barchart", { reponame: repoName, no_of_lines });
-        console.log("Bar Plot Data:", data); // Log API response
+        console.log("Bar Plot Data:", data); 
         return data;
     } catch (error) {
         console.error("Error fetching bar chart data:", error);
@@ -91,7 +91,7 @@ async function getauthorHistogram(start_date,end_date,username, reponame) {
 
 function createChart(plotData, targetElementId, chartType) {
     try {
-        console.log("Chart Data Received:", plotData); // Log chart data
+        console.log("Chart Data Received:", plotData); 
         if (typeof plotData !== 'object') plotData = JSON.parse(plotData);
 
         const data = plotData.data.map((trace) => ({
@@ -99,27 +99,27 @@ function createChart(plotData, targetElementId, chartType) {
             type: chartType,
         }));
 
-        console.log("Formatted Chart Data:", data); // Log formatted data for Plotly
+        console.log("Formatted Chart Data:", data); 
 
         const layout = {
             ...plotData.layout,
             title: {
-                text: 'Author Commit Distribution',
+                
                 font: { size: 18, color: '#e5e5e5' },
-                x: 0.5, // Center the title
+                x: 0.5, 
             },
             paper_bgcolor: '#222222',
             plot_bgcolor: '#111111',
             font: { color: '#e5e5e5' },
-            margin: { l: 50, r: 50, t: 50, b: 50 }, // Add padding around the chart
+            margin: { l: 50, r: 50, t: 50, b: 50 }, 
             legend: {
-                orientation: 'h', // Horizontal legend
+                orientation: 'h', 
                 x: 0.5,
                 xanchor: 'center',
-                y: -0.2, // Position below the chart
+                y: -0.2, 
             },
-            height: 400, // Fixed chart height
-            width: 700, // Fixed chart width
+            height: 400, 
+            width: 700, 
         };
 
         // Clear the container before rendering a new chart
@@ -192,8 +192,8 @@ async function fetchAuthorHistogramData(username, reponame, startDate, endDate) 
             end_date: endDate,
         });
 
-        renderAuthorHistogram(response); // Render the histogram using the response data
-        return response; // Return the raw JSON string
+        renderAuthorHistogram(response); 
+        return response; 
     } catch (error) {
         console.error("Error fetching histogram data:", error);
         throw error;
@@ -286,7 +286,7 @@ async function getAuthorRepositories(author) {
 // Populate the dropdown with repository names
 async function populateRepoDropdown(repoNames) {
     const dropdown = document.getElementById("repoDropdown");
-    dropdown.innerHTML = ""; // Clear existing options
+    dropdown.innerHTML = ""; 
 
     repoNames.forEach(repo => {
         const option = document.createElement("option");
@@ -299,8 +299,8 @@ async function populateRepoDropdown(repoNames) {
 // Render the pie chart based on the selected repository
 async function renderRepoPieChart(repoName) {
     try {
-        const plotData = await getGithubAuthorPieChart(repoName); // Fetch pie chart data
-        createChart(plotData, "authorPieChart", "pie"); // Render the chart
+        const plotData = await getGithubAuthorPieChart(repoName); 
+        createChart(plotData, "authorPieChart", "pie"); 
     } catch (error) {
         console.error("Error rendering pie chart:", error);
     }
@@ -316,7 +316,7 @@ document.getElementById("loadReposButton").addEventListener("click", async () =>
     try {
         const repoNames = await getAuthorRepositories(author);
         if (repoNames && repoNames.length > 0) {
-            await populateRepoDropdown(repoNames); // Update the dropdown
+            await populateRepoDropdown(repoNames); 
             // Render the first repo by default
             await renderRepoPieChart(repoNames[0]);
         } else {
@@ -334,11 +334,3 @@ document.getElementById("repoDropdown").addEventListener("change", async (event)
         await renderRepoPieChart(selectedRepo);
     }
 });
-
-
-
-
-
-
-
-
